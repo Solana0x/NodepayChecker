@@ -11,7 +11,7 @@ Automated Nodepay Multi Account Airdrop Checker with this Python bot, managing m
 
 1. git clone https://github.com/Solana0x/NodepayChecker
 2. cd NodepayChecker
-3. pip install requests
+3. `pip install requests`
 4. Add the Np tokens of the Nodepay accounts in `tokens.txt` , make sure to add the latest token as the token resets every 15 days !
 5. Add Proxies in `proxy.txt` file with the formate as : http://username:pasword@ip:port !!
 6. run `python check.py`
