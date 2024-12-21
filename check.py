@@ -33,6 +33,7 @@ def main():
             proxies_list = [line.strip() for line in f if line.strip()]
         if proxies_list:
             log(f"Loaded {len(proxies_list)} proxy/proxies.")
+            log("Proxy format is expected as: http://username:password@ip:port")
         else:
             log("No valid proxies found in 'proxy.txt'. Proceeding without proxies.")
     except FileNotFoundError:
@@ -50,6 +51,7 @@ def main():
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-site",
     }
+
     total_season1 = 0.0
     total_season2 = 0.0
 
@@ -62,8 +64,8 @@ def main():
             proxy_index = (i - 1) % len(proxies_list)
             proxy_str = proxies_list[proxy_index]
             current_proxy = {
-                "http":  f"http://{proxy_str}",
-                "https": f"http://{proxy_str}"
+                "http":  proxy_str,
+                "https": proxy_str
             }
             log(f" -> Using proxy: {proxy_str}")
         else:
@@ -76,7 +78,6 @@ def main():
                 log(" -> Warning: Response is not valid JSON. Raw text:")
                 log(response.text)
                 continue
-
             status_code = response.status_code
             log(f" -> Status Code: {status_code}")
             log(f" -> Response JSON: {data}")
@@ -87,8 +88,10 @@ def main():
                     season1_tokens = 0.0
                 if season2_tokens is None:
                     season2_tokens = 0.0
+
                 total_season1 += float(season1_tokens)
-                total_season2 += float(season2_tokens)    
+                total_season2 += float(season2_tokens)
+            
             log("")
 
         except requests.exceptions.RequestException as e:
