@@ -1,4 +1,4 @@
-import requests
+from curl_cffi import requests
 import sys
 
 LOG_FILE = "log.txt"
@@ -38,28 +38,30 @@ def main():
             log("No valid proxies found in 'proxy.txt'. Proceeding without proxies.")
     except FileNotFoundError:
         log("No 'proxy.txt' found. Proceeding without proxies.")
-    url = "https://api.nodepay.ai/api/season/airdrop-status?"
+    url = "https://api.nodepay.ai/api/season/airdrop-status"
     base_headers = {
-        "accept": "*/*",
-        "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-        "content-type": "application/json",
-        "priority": "u=1, i",
-        "sec-ch-ua": "\"Google Chrome\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-site",
+        "Accept": "*/*",
+        "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
+        "Content-Type": "application/json",
+        "Priority": "u=1, i",
+        "Sec-CH-UA": "\"Google Chrome\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\"",
+        "Sec-CH-UA-Mobile": "?0",
+        "Sec-CH-UA-Platform": "\"Windows\"",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-site",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " \
+                      "AppleWebKit/537.36 (KHTML, like Gecko) " \
+                      "Chrome/131.0.0.0 Safari/537.36",
     }
 
-    total_season1 = 0.0
-    total_season2 = 0.0
+    total_tokens = 0.0
 
     log("\nStarting checks...\n")
     for i, token in enumerate(tokens, start=1):
-        log(f"[Token #{i}] Checking token: {token[:10]}...")
+        log(f"[Token #{i}] Checking token: {token[:10]}{'...' if len(token) > 10 else ''}")
         headers = dict(base_headers)
-        headers["authorization"] = f"Bearer {token}"
+        headers["Authorization"] = f"Bearer {token}"
         if proxies_list:
             proxy_index = (i - 1) % len(proxies_list)
             proxy_str = proxies_list[proxy_index]
@@ -74,7 +76,7 @@ def main():
             response = requests.get(url, headers=headers, proxies=current_proxy, timeout=10)
             try:
                 data = response.json()
-            except Exception:
+            except ValueError:
                 log(" -> Warning: Response is not valid JSON. Raw text:")
                 log(response.text)
                 continue
@@ -82,23 +84,18 @@ def main():
             log(f" -> Status Code: {status_code}")
             log(f" -> Response JSON: {data}")
             if data.get("success") and isinstance(data.get("data"), dict):
-                season1_tokens = data["data"].get("season1_tokens") or 0.0
-                season2_tokens = data["data"].get("season2_tokens") or 0.0
-                if season1_tokens is None:
-                    season1_tokens = 0.0
-                if season2_tokens is None:
-                    season2_tokens = 0.0
+                season_0_1_2_tokens = data["data"].get("season_0_1_2_tokens") or 0.0
+                if season_0_1_2_tokens is None:
+                    season_0_1_2_tokens = 0.0
 
-                total_season1 += float(season1_tokens)
-                total_season2 += float(season2_tokens)
+                total_tokens += float(season_0_1_2_tokens)
             
             log("")
 
         except requests.exceptions.RequestException as e:
             log(f" -> Error: {e}\n")
-    total_tokens = total_season1 + total_season2
     log("All tokens have been checked.\n")
-    log(f"congratulations your total NodePay tokens are : {total_tokens} $NC")
+    log(f"Congratulations!! From Phantom :  Your total NodePay tokens are: {total_tokens} $NC")
 
 if __name__ == "__main__":
     main()
