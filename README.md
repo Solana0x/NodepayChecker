@@ -1,4 +1,4 @@
-# NodepayChecker 
+# Nodepay Checker Season 0,1,2 Combined
 
 Automated Nodepay Multi Account Airdrop Checker with this Python bot, managing multiple Nodepay accounts to safely check the points. Perfect for those having multiple Nodepay Accounts!!
 
@@ -23,3 +23,5 @@ Automated Nodepay Multi Account Airdrop Checker with this Python bot, managing m
 
 - **Telegram** - [https://t.me/phantomoalpha](https://t.me/phantomoalpha)
 - **Discord** - [https://discord.gg/pGJSPtp9zz](https://discord.gg/pGJSPtp9zz)
+
+# Congratulations from Phantom Side !! to everyone who ran Season 0 and Season 1 early We were amount the first Script runners !!
